@@ -165,7 +165,7 @@ def sns_heatmap(dataframe, key_column, key_column_format, chart_title, c_pos_neg
     plt.show()
     return
 
-# --- Initialize some empty dataframes ---
+# --- Initialize empty dataframes ---
 all_this_qtr_holdings = pd.DataFrame()
 all_last_qtr_holdings = pd.DataFrame()
 
@@ -174,7 +174,7 @@ managers = json.load(open("fund_managers.json"))    # Get the list of fund manag
 for manager in managers:
     cik, manager_name = manager['cik'], manager['name'] # Get the cik and manager name.
     fs = finsec.Filing(cik) # Initialize the finsec object. 
-    this_qtr_holdings = fs.latest_13f_filing.sort_values(by='Holding value', ascending=False)   # Get the latest filing. 
+    this_qtr_cover_page, detailed_this_qtr_holdings, this_qtr_holdings = fs.get_a_13f_filing("Q3-2022") # Get the latest filing. 
     last_qtr_cover_page, detailed_last_qtr_holdings, last_qtr_holdings = fs.get_a_13f_filing("Q2-2022") # Get the last (available) quarters filing. 
     this_qtr_holdings = dataframe_statistics(this_qtr_holdings, manager_name, cik)
     last_qtr_holdings = dataframe_statistics(last_qtr_holdings, manager_name, cik)
