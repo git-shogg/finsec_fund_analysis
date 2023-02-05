@@ -96,12 +96,17 @@ def map_cusips_cns(cusips, cns_file):
 def calc_pct_bought_sold(this_share_count, last_share_count):
     if this_share_count > 0 and last_share_count == 0:
         return 100
+    elif this_share_count == 0 and last_share_count == 0:   # In the rare circumstances that both this share count and last share count are zero return 0.
+        return 0
     else:
         return ((this_share_count/last_share_count)-1)*100
  
 def calc_dollar_bought_sold(count_bought_sold, last_holding_val, last_share_count, this_holding_val, this_share_count):
     if this_share_count == 0:
-        return count_bought_sold * (last_holding_val/last_share_count)
+        if last_share_count == 0:   # In the rare circumstances that both this share count and last share count are zero return 0.
+            return 0
+        else:
+            return count_bought_sold * (last_holding_val/last_share_count)
     else:
         return count_bought_sold * (this_holding_val/this_share_count)
 
@@ -116,7 +121,6 @@ def process_dataframe(this_qtr_df, last_qtr_df):
        'Holding value_this':0, 
        'Share or principal amount count_this':0,
        'Portfolio percentage_this':0})  # Fillna with zeroes to ensure calculations work. 
-    
     processed_dataframe['pct bought/sold holdings'] = processed_dataframe.apply(lambda x: calc_pct_bought_sold(x['Share or principal amount count_this'],x['Share or principal amount count_last']), axis=1)
     processed_dataframe['pct bought/sold holdings weighted by portfolio pct invested'] = processed_dataframe.apply(lambda x: x["pct bought/sold holdings"] * (x["Portfolio percentage_this"]/100), axis=1)
     processed_dataframe['# bought/sold holdings'] = processed_dataframe['Share or principal amount count_this'] - processed_dataframe['Share or principal amount count_last']
@@ -207,6 +211,7 @@ all_this_qtr_holdings['Share or principal amount count'] = all_this_qtr_holdings
 all_this_qtr_holdings['Portfolio percentage'] = all_this_qtr_holdings['Portfolio percentage'].fillna(0)
 
 # --- Create a processed dataframe ---
+
 processed_dataframe, ticker_dataframe = process_dataframe(all_this_qtr_holdings, all_last_qtr_holdings)
 
 # --- Build out heatmaps ---
