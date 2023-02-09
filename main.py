@@ -1,17 +1,15 @@
 import sys
-sys.path.append('C:/Users/STEPH/Documents/Scripts/finsec')
 import finsec
 import requests
 import json
 import pandas as pd
 import pdb
-print(finsec.__path__)
-import open_figi_key
 import time
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 
+OPEN_FIGI_KEY = "ENTER_OPENFIGI_KEY_HERE"
 OPEN_FIGI_API = "https://api.openfigi.com/v3/mapping"
 HEADERS = {"X-OPENFIGI-APIKEY": "{}".format(open_figi_key.KEY)}
 
@@ -175,7 +173,7 @@ for manager in managers:
     cik, manager_name = manager['cik'], manager['name'] # Get the cik and manager name.
     fs = finsec.Filing(cik) # Initialize the finsec object. 
     this_qtr_cover_page, detailed_this_qtr_holdings, this_qtr_holdings = fs.get_a_13f_filing("Q3-2022") # Get the latest filing. 
-    last_qtr_cover_page, detailed_last_qtr_holdings, last_qtr_holdings = fs.get_a_13f_filing("Q2-2022") # Get the last (available) quarters filing. 
+    last_qtr_cover_page, detailed_last_qtr_holdings, last_qtr_holdings = fs.get_a_13f_filing("Q2-2022") # Get the last (available) quarterly filing. 
     this_qtr_holdings = dataframe_statistics(this_qtr_holdings, manager_name, cik)
     last_qtr_holdings = dataframe_statistics(last_qtr_holdings, manager_name, cik)
     all_this_qtr_holdings = pd.concat([all_this_qtr_holdings, this_qtr_holdings], ignore_index=True, sort=False)
@@ -202,16 +200,15 @@ all_last_qtr_holdings['Ticker'] = all_last_qtr_holdings['CUSIP'].map(dict(cusip_
 all_this_qtr_holdings['Ticker'] = all_this_qtr_holdings['Ticker'].fillna('N/A')
 all_last_qtr_holdings['Ticker'] = all_last_qtr_holdings['Ticker'].fillna('N/A')
 
-all_last_qtr_holdings['Holding value'] = all_last_qtr_holdings['Holding value'].fillna(0)
-all_last_qtr_holdings['Share or principal amount count'] = all_last_qtr_holdings['Share or principal amount count'].fillna(0)
-all_last_qtr_holdings['Portfolio percentage'] = all_last_qtr_holdings['Portfolio percentage'].fillna(0)
+# all_last_qtr_holdings['Holding value'] = all_last_qtr_holdings['Holding value'].fillna(0)
+# all_last_qtr_holdings['Share or principal amount count'] = all_last_qtr_holdings['Share or principal amount count'].fillna(0)
+# all_last_qtr_holdings['Portfolio percentage'] = all_last_qtr_holdings['Portfolio percentage'].fillna(0)
 
-all_this_qtr_holdings['Holding value'] = all_this_qtr_holdings['Holding value'].fillna(0)
-all_this_qtr_holdings['Share or principal amount count'] = all_this_qtr_holdings['Share or principal amount count'].fillna(0)
-all_this_qtr_holdings['Portfolio percentage'] = all_this_qtr_holdings['Portfolio percentage'].fillna(0)
+# all_this_qtr_holdings['Holding value'] = all_this_qtr_holdings['Holding value'].fillna(0)
+# all_this_qtr_holdings['Share or principal amount count'] = all_this_qtr_holdings['Share or principal amount count'].fillna(0)
+# all_this_qtr_holdings['Portfolio percentage'] = all_this_qtr_holdings['Portfolio percentage'].fillna(0)
 
 # --- Create a processed dataframe ---
-
 processed_dataframe, ticker_dataframe = process_dataframe(all_this_qtr_holdings, all_last_qtr_holdings)
 
 # --- Build out heatmaps ---
