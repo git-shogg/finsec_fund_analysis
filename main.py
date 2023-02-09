@@ -200,14 +200,6 @@ all_last_qtr_holdings['Ticker'] = all_last_qtr_holdings['CUSIP'].map(dict(cusip_
 all_this_qtr_holdings['Ticker'] = all_this_qtr_holdings['Ticker'].fillna('N/A')
 all_last_qtr_holdings['Ticker'] = all_last_qtr_holdings['Ticker'].fillna('N/A')
 
-# all_last_qtr_holdings['Holding value'] = all_last_qtr_holdings['Holding value'].fillna(0)
-# all_last_qtr_holdings['Share or principal amount count'] = all_last_qtr_holdings['Share or principal amount count'].fillna(0)
-# all_last_qtr_holdings['Portfolio percentage'] = all_last_qtr_holdings['Portfolio percentage'].fillna(0)
-
-# all_this_qtr_holdings['Holding value'] = all_this_qtr_holdings['Holding value'].fillna(0)
-# all_this_qtr_holdings['Share or principal amount count'] = all_this_qtr_holdings['Share or principal amount count'].fillna(0)
-# all_this_qtr_holdings['Portfolio percentage'] = all_this_qtr_holdings['Portfolio percentage'].fillna(0)
-
 # --- Create a processed dataframe ---
 processed_dataframe, ticker_dataframe = process_dataframe(all_this_qtr_holdings, all_last_qtr_holdings)
 
@@ -220,12 +212,3 @@ sns_heatmap(most_sold, 'dollars_bought_sold', '$M', 'Most Sold Asset by Dollar V
 
 most_bought_sold_by_allocation = ticker_dataframe.sort_values(by=['avg_bought_sold_weight_by_portfolio_pct'], ascending=False)[:100]
 sns_heatmap(most_bought_sold_by_allocation, 'avg_bought_sold_weight_by_portfolio_pct', '%', 'Most Bought Asset by Portfolio Allocation', c_pos_neg='pos')
-
-
-
-
-# all_this_qtr_holdings = pd.read_excel('all_this_qtr_holdings.xlsx')
-# all_last_qtr_holdings = pd.read_excel('all_last_qtr_holdings.xlsx')
-
-# all_this_qtr_holdings.to_excel("all_this_qtr_holdings.xlsx")    # !!! Not req
-# all_last_qtr_holdings.to_excel("all_last_qtr_holdings.xlsx")
